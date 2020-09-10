@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './features/peer-graphql/websocket'
 
 function App() {
   return (
