@@ -1,6 +1,7 @@
 import WebSocket from 'isomorphic-ws'
 import { graphql } from 'graphql'
 import { schema } from './schema'
+import { eventEmitter } from './eventEmitter'
 
 export const socket = new WebSocket(
   'wss://connect.websocket.in/v3/1?apiKey=4sC6D9hsMYg5zcl15Y94nXNz8KAxr8eezGglKE9FkhRLnHcokuKsgCCQKZcW'
@@ -33,13 +34,20 @@ function onClose (evt: CloseEvent) {
 }
 
 function onMessage (evt: MessageEvent) {
-  graphql(schema, evt.data).then(result => {
-    // Prints
-    // {
-    //   data: { hello: "world" }
-    // }
-    console.log(result)
-  })
+  const payload = JSON.parse(evt.data)
+  if (payload.message === 'request') {
+    graphql(schema, payload.query).then(result => {
+      doSend(
+        JSON.stringify({
+          message: 'response',
+          hash: payload.hash,
+          data: result.data
+        })
+      )
+    })
+  } else if (payload.message === 'response') {
+    eventEmitter.emit(payload.hash, { data: payload.data })
+  }
 }
 
 function onError (evt: MessageEvent) {

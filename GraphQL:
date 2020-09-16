@@ -1,0 +1,9 @@
+GraphQL:
+provide data in a form that is useful to product developers building a view
+
+fetch data more efficiently
+decouple product code and server logic
+
+wamp
+web-rtc
+websocket events in react useEffect
