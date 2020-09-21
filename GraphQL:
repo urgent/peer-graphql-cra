@@ -7,3 +7,5 @@ decouple product code and server logic
 wamp
 web-rtc
 websocket events in react useEffect
+
+A state machine makes the event handling explicitly dependent on both the nature of the event and on the context (state) of the system. A state captures the relevant aspects of the system's history very efficiently. For example, when you strike a key on a keyboard, the character code generated will be either an uppercase or a lowercase character, depending on whether the Shift is active. Therefore, the keyboard is in the "shifted" state, or the "default" state. The behavior of a keyboard depends only on certain aspects of its history, namely whether Shift has been depressed, but not, for example, on how many and which specific characters have been typed previously. A state can abstract away all possible (but irrelevant) event sequences and capture only the relevant ones. 
