@@ -1,18 +1,11 @@
-import {
-  Environment,
-  Network,
-  RecordSource,
-  Store,
-  GraphQLResponseWithData
-} from 'relay-runtime'
-import * as t from 'io-ts'
-import * as R from 'fp-ts/lib/Reader'
-import * as E from 'fp-ts/lib/Either'
-import { fanout } from 'fp-ts/lib/Strong'
-import { pipe, flow, identity } from 'fp-ts/lib/function'
-import { eventEmitter } from './features/peer-graphql/eventEmitter'
+import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 import { EventEmitter } from 'events'
+import * as R from 'fp-ts/lib/Reader'
+import { fanout } from 'fp-ts/lib/Strong'
+import { pipe, flow } from 'fp-ts/lib/function'
+import { eventEmitter } from './features/peer-graphql/eventEmitter'
 import { doSend } from './features/peer-graphql/websocket'
+import { decode } from './features/peer-graphql/security/types/GraphQL'
 
 const respond = (eventEmitter: EventEmitter) => (hash: string) =>
   new Promise((resolve, reject) => {
@@ -48,40 +41,6 @@ const format = ({
   variables
 })
 
-// GraphQL response runtime to avoid typeguard
-
-const PayloadData = t.type({
-  data: t.UnknownRecord
-})
-
-const PayloadError = t.type({
-  message: t.string
-})
-
-const Location = t.type({
-  line: t.number,
-  column: t.number
-})
-
-const Fault = t.partial({
-  locations: t.array(Location),
-  severity: t.union([
-    t.literal('CRITICAL'),
-    t.literal('ERROR'),
-    t.literal('WARNING')
-  ]) // Not officially part of the spec, but used at Facebook
-})
-
-const Meta = t.partial({
-  errors: t.intersection([PayloadError, Fault]),
-  extensions: t.UnknownRecord,
-  label: t.string,
-  path: t.union([t.array(t.string), t.array(t.number)])
-})
-
-const Runtime = t.intersection([PayloadData, Meta])
-type Runtime = t.TypeOf<typeof Runtime>
-
 async function fetchQuery (operation: any, variables: any) {
   return pipe(
     // hash graphql query for unique listener
@@ -99,21 +58,7 @@ async function fetchQuery (operation: any, variables: any) {
         doSend
       )
     ),
-    async ([result]) =>
-      pipe(
-        await result,
-        Runtime.decode,
-        E.fold<t.Errors, Runtime, Runtime>(
-          // format runtime decode error to graphql error
-          (errors: t.Errors) => ({
-            data: {},
-            errors: { message: String(errors) }
-          }),
-          identity
-        ),
-        // cast WebSocket response to GraphQLResponse, as safely as possible because of runtime decode
-        (runtime: Runtime) => runtime as GraphQLResponseWithData
-      )
+    decode
   )
 }
 

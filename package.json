@@ -41,6 +41,8 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/relay-runtime": "^10.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
     "babel-plugin-relay": "^10.0.1",
     "fp-ts": "^2.8.3",
     "graphql": "^15.3.0",
@@ -50,5 +52,9 @@
     "relay-config": "^10.0.1",
     "typescript": "^4.0.3",
     "yarn": "^1.22.5"
+  },
+  "resolutions": {
+    "react-scripts/@typescript-eslint/parser": "^4.2.0",
+    "react-scripts/@typescript-eslint/eslint-plugin": "^4.2.0"
   }
 }
