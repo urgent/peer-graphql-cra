@@ -17,4 +17,4 @@ const Body = t.partial({
 
 export const State = t.intersection([Head, Body])
 
-export type State = t.TypeOf<typeof State>
+export type ST = t.TypeOf<typeof State>

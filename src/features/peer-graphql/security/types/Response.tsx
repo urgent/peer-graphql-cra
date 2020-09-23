@@ -11,10 +11,10 @@ const Response = t.type({
   data: t.unknown
 })
 
-export type Response = t.TypeOf<typeof Response>
+export type RES = t.TypeOf<typeof Response>
 
 function emit (eventEmitter: EventEmitter) {
-  return (response: Response) =>
+  return (response: RES) =>
     eventEmitter.emit(response.hash, { data: response.data })
 }
 
@@ -27,5 +27,5 @@ declare module '../utilities' {
 Reducer.prototype.response = flow(
   decode(Response),
   IOE.fromEither,
-  IOE.map<Response, void>(emit(eventEmitter))
+  IOE.map<RES, void>(emit(eventEmitter))
 )

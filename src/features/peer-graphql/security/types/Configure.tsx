@@ -8,7 +8,7 @@ const Configure = t.type({
   hash: t.string
 })
 
-export type Configure = t.TypeOf<typeof Configure>
+export type CFG = t.TypeOf<typeof Configure>
 
 export const configure = () => {}
 
@@ -21,5 +21,5 @@ declare module '../utilities' {
 Reducer.prototype.configure = flow(
   decode(Configure),
   IOE.fromEither,
-  IOE.map<Configure, void>(configure)
+  IOE.map<CFG, void>(configure)
 )

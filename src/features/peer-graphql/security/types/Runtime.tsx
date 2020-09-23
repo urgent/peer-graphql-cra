@@ -3,8 +3,6 @@ import { GraphQLResponseWithData } from 'relay-runtime'
 import * as E from 'fp-ts/lib/Either'
 import { pipe, identity } from 'fp-ts/lib/function'
 
-// GraphQL response runtime to avoid typeguard
-
 const PayloadData = t.type({
   data: t.UnknownRecord
 })
@@ -35,13 +33,18 @@ const Meta = t.partial({
 })
 
 const Runtime = t.intersection([PayloadData, Meta])
-type Runtime = t.TypeOf<typeof Runtime>
+type RUN = t.TypeOf<typeof Runtime>
 
-export const decode = async ([result]: [Promise<unknown>, void]) =>
+/**
+ * Generic runtime to GraphQLResponseWithData
+ * @param {any} result runtime data
+ * @returns {GraphQLResponseWithData} runtime decoded response with decode errors if any
+ */
+export const runtime = async ([result]: [Promise<unknown>, void]) =>
   pipe(
     await result,
     Runtime.decode,
-    E.fold<t.Errors, Runtime, Runtime>(
+    E.fold<t.Errors, RUN, RUN>(
       // format runtime decode error to graphql error
       (errors: t.Errors) => ({
         data: {},
@@ -50,5 +53,23 @@ export const decode = async ([result]: [Promise<unknown>, void]) =>
       identity
     ),
     // cast WebSocket response to GraphQLResponse, as safely as possible because of runtime decode
-    (runtime: Runtime) => runtime as GraphQLResponseWithData
+    (runtime: RUN) => runtime as GraphQLResponseWithData
   )
+
+/**
+ * GraphQL operation to WebSocket request
+ * @param {any, any} fetch {operation, variables} to format
+ * @return {} WebSocket request from graphql operation
+ */
+export const format = ({
+  operation,
+  variables
+}: {
+  operation: { text: string }
+  variables: any
+}) => (hash: string) => ({
+  message: 'request',
+  query: operation.text,
+  hash,
+  variables
+})

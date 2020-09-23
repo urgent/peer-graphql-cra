@@ -13,9 +13,9 @@ const Request = t.type({
   variables: t.record(t.string, t.string)
 })
 
-export type Request = t.TypeOf<typeof Request>
+export type REQ = t.TypeOf<typeof Request>
 
-export async function respond (request: Request) {
+export async function respond (request: REQ) {
   pipe(await graphql(schema, request.query), (result: ExecutionResult) =>
     doSend(
       JSON.stringify({
@@ -36,5 +36,5 @@ declare module '../utilities' {
 Reducer.prototype.request = flow(
   decode(Request),
   TE.fromEither,
-  TE.map<Request, Promise<void>>(respond)
+  TE.map<REQ, Promise<void>>(respond)
 )

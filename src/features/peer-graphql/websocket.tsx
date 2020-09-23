@@ -2,7 +2,7 @@ import WebSocket from 'isomorphic-ws'
 import * as E from 'fp-ts/lib/Either'
 import { pipe } from 'fp-ts/lib/function'
 import { decode, Reducer } from './security/utilities'
-import { State } from './security/types/State'
+import { State, ST } from './security/types/State'
 import './security/types/Request'
 import './security/types/Response'
 import './security/types/Configure'
@@ -44,7 +44,7 @@ function onMessage (evt: MessageEvent) {
       return new Error(String(err))
     }),
     E.chain(decode(State)),
-    E.map((state: State) => Reducer.prototype[state.message](state)())
+    E.map((state: ST) => Reducer.prototype[state.message](state)())
   )
 }
 
