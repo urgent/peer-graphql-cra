@@ -4,7 +4,7 @@ import { doSend } from '../../websocket'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { pipe, flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
-import { decode, Reducer } from '../utilities'
+import { decode, Reducer } from '../peer'
 
 const Request = t.type({
   message: t.literal('request'),
@@ -27,7 +27,7 @@ export async function respond (request: REQ) {
   )
 }
 
-declare module '../utilities' {
+declare module '../peer' {
   export interface Reducer {
     request: (i: unknown) => TE.TaskEither<Error, Promise<void>>
   }

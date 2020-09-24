@@ -1,8 +1,5 @@
 import WebSocket from 'isomorphic-ws'
-import * as E from 'fp-ts/lib/Either'
-import { pipe } from 'fp-ts/lib/function'
-import { decode, Reducer } from './security/utilities'
-import { State, ST } from './security/types/State'
+import { relay } from './security/peer'
 import './security/types/Request'
 import './security/types/Response'
 import './security/types/Configure'
@@ -19,9 +16,8 @@ socket.onopen = function (evt: MessageEvent) {
 socket.onclose = function (evt: CloseEvent) {
   onClose(evt)
 }
-socket.onmessage = function (evt: MessageEvent) {
-  onMessage(evt)
-}
+socket.onmessage = relay
+
 socket.onerror = function (evt: MessageEvent) {
   onError(evt)
 }
@@ -35,17 +31,6 @@ function onOpen (evt: MessageEvent) {
 
 function onClose (evt: CloseEvent) {
   writeToScreen('DISCONNECTED')
-}
-
-function onMessage (evt: MessageEvent) {
-  pipe(
-    E.parseJSON(evt.data, E.toError),
-    E.mapLeft(err => {
-      return new Error(String(err))
-    }),
-    E.chain(decode(State)),
-    E.map((state: ST) => Reducer.prototype[state.message](state)())
-  )
 }
 
 function onError (evt: MessageEvent) {
