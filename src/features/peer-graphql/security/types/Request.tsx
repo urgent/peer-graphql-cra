@@ -8,8 +8,8 @@ import { decode, Reducer } from '../peer'
 
 const Request = t.type({
   message: t.literal('request'),
-  query: t.string,
   hash: t.string,
+  query: t.string,
   variables: t.record(t.string, t.string)
 })
 
