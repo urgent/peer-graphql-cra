@@ -1,10 +1,11 @@
 import { graphql, ExecutionResult } from 'graphql'
-import { schema } from '../../schema'
-import { doSend } from '../../websocket'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { pipe, flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
 import { decode, Reducer } from '../peer'
+import { schema } from '../../schema'
+import { doSend } from '../../websocket'
+import { RES } from './Response'
 
 const Request = t.type({
   message: t.literal('request'),
@@ -15,16 +16,20 @@ const Request = t.type({
 
 export type REQ = t.TypeOf<typeof Request>
 
-export async function respond (request: REQ) {
-  pipe(await graphql(schema, request.query), (result: ExecutionResult) =>
-    doSend(
-      JSON.stringify({
+export async function format (request: REQ): Promise<RES> {
+  return pipe(
+    await graphql(schema, request.query),
+    (result: ExecutionResult) =>
+      ({
         message: 'response',
         hash: request.hash,
         data: result.data
-      })
-    )
+      } as RES)
   )
+}
+
+export async function send (response: Promise<RES>): Promise<void> {
+  return pipe(await response, JSON.stringify, doSend)
 }
 
 declare module '../peer' {
@@ -36,5 +41,6 @@ declare module '../peer' {
 Reducer.prototype.request = flow(
   decode(Request),
   TE.fromEither,
-  TE.map<REQ, Promise<void>>(respond)
+  TE.map<REQ, Promise<RES>>(format),
+  TE.map<Promise<RES>, Promise<void>>(send)
 )
