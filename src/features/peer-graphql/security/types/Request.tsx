@@ -2,10 +2,11 @@ import { graphql, ExecutionResult } from 'graphql'
 import * as TE from 'fp-ts/lib/TaskEither'
 import { pipe, flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
-import { decode, Reducer } from '../peer'
+import { decode } from '../peer'
 import { schema } from '../../schema'
 import { doSend } from '../../websocket'
 import { RES } from './Response'
+import { Reducer } from './Reducer'
 
 const Request = t.type({
   message: t.literal('request'),
@@ -32,7 +33,7 @@ export async function send (response: Promise<RES>): Promise<void> {
   return pipe(await response, JSON.stringify, doSend)
 }
 
-declare module '../peer' {
+declare module './Reducer' {
   export interface Reducer {
     request: (i: unknown) => TE.TaskEither<Error, Promise<void>>
   }

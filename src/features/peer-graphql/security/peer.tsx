@@ -5,11 +5,10 @@ import { flow, pipe } from 'fp-ts/lib/function'
 import { ST, State } from './types/State'
 import { TaskEither } from 'fp-ts/lib/TaskEither'
 import { IOEither } from 'fp-ts/lib/IOEither'
-
-/**
- * Extensible map of peer messages to a reducer function
- */
-export class Reducer {}
+import { Reducer } from './types/Reducer'
+import './types/Request'
+import './types/Response'
+import './types/Configure'
 
 /**
  * Enforces return value from reducer to be callable

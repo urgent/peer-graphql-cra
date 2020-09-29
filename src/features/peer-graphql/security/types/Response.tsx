@@ -1,9 +1,10 @@
 import * as IOE from 'fp-ts/lib/IOEither'
 import { flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
-import { decode, Reducer } from '../peer'
+import { decode } from '../peer'
 import { EventEmitter } from 'events'
 import { eventEmitter } from '../../eventEmitter'
+import { Reducer } from './Reducer'
 
 const Response = t.type({
   message: t.literal('response'),
@@ -18,7 +19,7 @@ function emit (eventEmitter: EventEmitter) {
     eventEmitter.emit(response.hash, { data: response.data })
 }
 
-declare module '../peer' {
+declare module './Reducer' {
   export interface Reducer {
     response: (i: unknown) => IOE.IOEither<Error, void>
   }
