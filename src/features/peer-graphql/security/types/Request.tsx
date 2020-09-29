@@ -16,7 +16,7 @@ const Request = t.type({
 
 export type REQ = t.TypeOf<typeof Request>
 
-export async function format (request: REQ): Promise<RES> {
+export async function query (request: REQ): Promise<RES> {
   return pipe(
     await graphql(schema, request.query),
     (result: ExecutionResult) =>
@@ -41,6 +41,6 @@ declare module '../peer' {
 Reducer.prototype.request = flow(
   decode(Request),
   TE.fromEither,
-  TE.map<REQ, Promise<RES>>(format),
+  TE.map<REQ, Promise<RES>>(query),
   TE.map<Promise<RES>, Promise<void>>(send)
 )

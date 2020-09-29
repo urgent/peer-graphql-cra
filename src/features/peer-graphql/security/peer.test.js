@@ -58,7 +58,7 @@ test('let state returned from relay({message:"response"}) be the same as deseria
     );
 });
 
-test('relay twice is the same thing as relay once', () => {
+test('let relay twice is the same thing as relay once', () => {
     fc.assert(
         fc.property(
             fc.record(request), fc.record(response), (a, b) => {
