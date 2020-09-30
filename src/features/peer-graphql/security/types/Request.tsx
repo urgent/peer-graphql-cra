@@ -8,6 +8,7 @@ import { doSend } from '../../websocket'
 import { RES } from './Response'
 import { Reducer } from './Reducer'
 
+// define types for decode
 const Request = t.type({
   message: t.literal('request'),
   hash: t.string,
@@ -17,6 +18,7 @@ const Request = t.type({
 
 export type REQ = t.TypeOf<typeof Request>
 
+//define functions to run
 export async function query (request: REQ): Promise<RES> {
   return pipe(
     await graphql(schema, request.query),
@@ -33,12 +35,18 @@ export async function send (response: Promise<RES>): Promise<void> {
   return pipe(await response, JSON.stringify, doSend)
 }
 
+//extend interface
 declare module './Reducer' {
   export interface Reducer {
     request: (i: unknown) => TE.TaskEither<Error, Promise<void>>
   }
+
+  export interface URI2Type {
+    request: REQ
+  }
 }
 
+// extend reducer
 Reducer.prototype.request = flow(
   decode(Request),
   TE.fromEither,

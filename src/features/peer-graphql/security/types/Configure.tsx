@@ -11,13 +11,16 @@ const Configure = t.type({
 
 export type CFG = t.TypeOf<typeof Configure>
 
-export const configure = () => {}
-
 declare module './Reducer' {
   export interface Reducer {
     configure: (i: unknown) => IOE.IOEither<Error, void>
   }
+  export interface URI2Type {
+    configure: CFG
+  }
 }
+
+export const configure = () => {}
 
 Reducer.prototype.configure = flow(
   decode(Configure),

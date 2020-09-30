@@ -2,20 +2,27 @@ import * as t from 'io-ts'
 import * as E from 'fp-ts/lib/Either'
 import { failure } from 'io-ts/lib/PathReporter'
 import { flow, pipe } from 'fp-ts/lib/function'
-import { ST, State } from './types/State'
 import { TaskEither } from 'fp-ts/lib/TaskEither'
 import { IOEither } from 'fp-ts/lib/IOEither'
-import { Reducer } from './types/Reducer'
+import { Reducer, URI2Type, Props } from './types/Reducer'
 import './types/Request'
 import './types/Response'
 import './types/Configure'
+
+type URIS = keyof URI2Type
+
+declare module './types/Reducer' {
+  export interface Props {
+    message: URIS
+  }
+}
 
 /**
  * Enforces return value from reducer to be callable
  */
 export type Reduction = E.Either<
   Error,
-  [TaskEither<Error, Promise<void>> | IOEither<Error, void>, ST]
+  [TaskEither<Error, Promise<void>> | IOEither<Error, void>, Props]
 >
 
 /**
@@ -29,9 +36,13 @@ export const reduce = (evt: MessageEvent): Reduction =>
     E.mapLeft(err => {
       return new Error(String(err))
     }),
-    E.chain(decode(State)),
+    E.chain(
+      // need to widen json. Indexing for extensibility complicates type checks
+      (json: any): E.Either<Error, Props> =>
+        pipe(Object.assign({ message: '', ...json }), E.right)
+    ),
     // tuple for testing
-    E.map((state: ST) => [Reducer.prototype[state.message](state), state])
+    E.map((props: Props) => [Reducer.prototype[props.message](props), props])
   )
 
 /**

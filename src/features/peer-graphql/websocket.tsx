@@ -20,7 +20,6 @@ socket.onerror = function (evt: MessageEvent) {
 }
 
 function onOpen (evt: MessageEvent) {
-  writeToScreen('CONNECTED')
   while (queue.length > 0) {
     socket.send(queue.pop())
   }

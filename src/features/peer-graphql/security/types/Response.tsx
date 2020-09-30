@@ -14,15 +14,19 @@ const Response = t.type({
 
 export type RES = t.TypeOf<typeof Response>
 
-function emit (eventEmitter: EventEmitter) {
-  return (response: RES) =>
-    eventEmitter.emit(response.hash, { data: response.data })
-}
-
 declare module './Reducer' {
   export interface Reducer {
     response: (i: unknown) => IOE.IOEither<Error, void>
   }
+
+  export interface URI2Type {
+    response: RES
+  }
+}
+
+function emit (eventEmitter: EventEmitter) {
+  return (response: RES) =>
+    eventEmitter.emit(response.hash, { data: response.data })
 }
 
 Reducer.prototype.response = flow(
