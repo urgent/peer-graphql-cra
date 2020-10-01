@@ -5,7 +5,7 @@ import { decode } from '../peer'
 import { Reducer } from '../reducer'
 
 const Configure = t.type({
-  message: t.literal('configure'),
+  uri: t.literal('configure'),
   hash: t.string
 })
 

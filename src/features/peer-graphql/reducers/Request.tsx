@@ -10,7 +10,7 @@ import { RES } from './Response'
 
 // define types for decode
 const Request = t.type({
-  message: t.literal('request'),
+  uri: t.literal('request'),
   hash: t.string,
   query: t.string,
   variables: t.record(t.string, t.string)
@@ -24,7 +24,7 @@ export async function query (request: REQ): Promise<RES> {
     await graphql(schema, request.query),
     (result: ExecutionResult) =>
       ({
-        message: 'response',
+        uri: 'response',
         hash: request.hash,
         data: result.data
       } as RES)

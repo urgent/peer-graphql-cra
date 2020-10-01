@@ -13,7 +13,7 @@ type URIS = keyof URI2Type
 
 declare module './reducer' {
   export interface Props {
-    message: URIS
+    uri: URIS
   }
 }
 
@@ -39,10 +39,10 @@ export const reduce = (evt: MessageEvent): Reduction =>
     E.chain(
       // need to widen json. Indexing for extensibility complicates type checks
       (json: any): E.Either<Error, Props> =>
-        pipe(Object.assign({ message: '', ...json }), E.right)
+        pipe(Object.assign({ uri: '', ...json }), E.right)
     ),
     // tuple for testing
-    E.map((props: Props) => [Reducer.prototype[props.message](props), props])
+    E.map((props: Props) => [Reducer.prototype[props.uri](props), props])
   )
 
 /**

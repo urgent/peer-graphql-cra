@@ -68,7 +68,7 @@ export const format = ({
   operation: { text: string }
   variables: any
 }) => (hash: string) => ({
-  message: 'request',
+  uri: 'request',
   query: operation.text,
   hash,
   variables

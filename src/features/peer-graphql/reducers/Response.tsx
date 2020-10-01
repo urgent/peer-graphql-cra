@@ -7,7 +7,7 @@ import { eventEmitter } from '../eventEmitter'
 import { Reducer } from '../reducer'
 
 const Response = t.type({
-  message: t.literal('response'),
+  uri: t.literal('response'),
   hash: t.string,
   data: t.unknown
 })

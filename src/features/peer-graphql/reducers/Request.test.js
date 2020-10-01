@@ -4,17 +4,17 @@ import { schema } from '../schema'
 import { query } from './Request'
 
 const request = {
-    message: fc.constant("request"),
+    uri: fc.constant("request"),
     hash: fc.hexaString(40, 40),
     query: fc.constant(`query AppHelloQuery {hello}`),
     variables: fc.constant({})
 };
 
-test('let query give a response message', (done) => {
+test('let query give a response uri', (done) => {
     fc.assert(
         fc.asyncProperty(fc.record(request), async (a) => {
             const query1 = await query(a)
-            expect(query1.message).toBe("response")
+            expect(query1.uri).toBe("response")
             done()
         })
     )

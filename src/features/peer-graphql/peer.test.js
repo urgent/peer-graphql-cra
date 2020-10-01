@@ -8,14 +8,14 @@ function reverse(s) {
 }
 
 const request = {
-    message: fc.constant("request"),
+    uri: fc.constant("request"),
     hash: fc.hexaString(40, 40),
     query: fc.constant(`query AppHelloQuery {hello}`),
     variables: fc.constant({})
 };
 
 const response = {
-    message: fc.constant("response"),
+    uri: fc.constant("response"),
     hash: fc.hexaString(40, 40),
     data: fc.constant({ hello: 'world' }),
 }
@@ -46,7 +46,7 @@ test('let relay then reverse hash be the same as reverse hash then relay', () =>
     );
 });
 
-test('let state returned from relay({message:"response"}) be the same as deserialized input', () => {
+test('let state returned from relay({uri:"response"}) be the same as deserialized input', () => {
     fc.assert(
         fc.property(
             fc.record(response), (a) => {
@@ -67,7 +67,7 @@ test('let relay twice is the same thing as relay once', () => {
     );
 });
 
-test('let tasks returned from relay({message:"request"}) and relay({message:"response"}) to be function types', () => {
+test('let tasks returned from relay({uri:"request"}) and relay({uri:"response"}) to be function types', () => {
     fc.assert(
         fc.property(
             fc.record(request), fc.record(response), (a, b) => {
