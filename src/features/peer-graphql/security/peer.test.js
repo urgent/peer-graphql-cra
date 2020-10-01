@@ -2,9 +2,6 @@ import * as fc from 'fast-check';
 import * as E from 'fp-ts/lib/Either'
 import { pipe, identity } from 'fp-ts/lib/function'
 import { reduce } from './peer'
-import './types/Request'
-import './types/Response'
-import './types/Configure'
 
 function reverse(s) {
     return [...s].reverse().join("");
