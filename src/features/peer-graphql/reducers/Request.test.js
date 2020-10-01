@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 import { graphql } from 'graphql'
-import { schema } from '../../schema'
+import { schema } from '../schema'
 import { query } from './Request'
 
 const request = {

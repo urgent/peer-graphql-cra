@@ -1,5 +1,5 @@
 import WebSocket from 'isomorphic-ws'
-import { relay } from './security/peer'
+import { relay } from './peer'
 
 export const socket = new WebSocket(
   'wss://connect.websocket.in/v3/1?apiKey=4sC6D9hsMYg5zcl15Y94nXNz8KAxr8eezGglKE9FkhRLnHcokuKsgCCQKZcW'

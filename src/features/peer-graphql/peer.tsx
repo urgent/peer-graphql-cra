@@ -4,14 +4,14 @@ import { failure } from 'io-ts/lib/PathReporter'
 import { flow, pipe } from 'fp-ts/lib/function'
 import { TaskEither } from 'fp-ts/lib/TaskEither'
 import { IOEither } from 'fp-ts/lib/IOEither'
-import { Reducer, URI2Type, Props } from './types/Reducer'
-import './types/Request'
-import './types/Response'
-import './types/Configure'
+import { Reducer, URI2Type, Props } from './reducer'
+import './reducers/Request'
+import './reducers/Response'
+import './reducers/Configure'
 
 type URIS = keyof URI2Type
 
-declare module './types/Reducer' {
+declare module './reducer' {
   export interface Props {
     message: URIS
   }

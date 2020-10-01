@@ -3,10 +3,10 @@ import * as TE from 'fp-ts/lib/TaskEither'
 import { pipe, flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
 import { decode } from '../peer'
-import { schema } from '../../schema'
-import { doSend } from '../../websocket'
+import { schema } from '../schema'
+import { doSend } from '../websocket'
+import { Reducer } from '../reducer'
 import { RES } from './Response'
-import { Reducer } from './Reducer'
 
 // define types for decode
 const Request = t.type({
@@ -36,7 +36,7 @@ export async function send (response: Promise<RES>): Promise<void> {
 }
 
 //extend interface
-declare module './Reducer' {
+declare module '../reducer' {
   export interface Reducer {
     request: (i: unknown) => TE.TaskEither<Error, Promise<void>>
   }

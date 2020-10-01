@@ -4,8 +4,8 @@ import { fanout } from 'fp-ts/lib/Strong'
 import { pipe, flow } from 'fp-ts/lib/function'
 import { eventEmitter } from './eventEmitter'
 import { doSend } from './websocket'
-import { digestMessage } from './security/peer'
-import { format, runtime } from './security/types/Runtime'
+import { digestMessage } from './peer'
+import { format, runtime } from './graphQLResponseWithData'
 
 const respond = (eventEmitter: EventEmitter) => (hash: string) =>
   new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ import * as IOE from 'fp-ts/lib/IOEither'
 import { flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
 import { decode } from '../peer'
-import { Reducer } from './Reducer'
+import { Reducer } from '../reducer'
 
 const Configure = t.type({
   message: t.literal('configure'),
@@ -11,7 +11,7 @@ const Configure = t.type({
 
 export type CFG = t.TypeOf<typeof Configure>
 
-declare module './Reducer' {
+declare module '../reducer' {
   export interface Reducer {
     configure: (i: unknown) => IOE.IOEither<Error, void>
   }

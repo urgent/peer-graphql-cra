@@ -3,8 +3,8 @@ import { flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
 import { decode } from '../peer'
 import { EventEmitter } from 'events'
-import { eventEmitter } from '../../eventEmitter'
-import { Reducer } from './Reducer'
+import { eventEmitter } from '../eventEmitter'
+import { Reducer } from '../reducer'
 
 const Response = t.type({
   message: t.literal('response'),
@@ -14,7 +14,7 @@ const Response = t.type({
 
 export type RES = t.TypeOf<typeof Response>
 
-declare module './Reducer' {
+declare module '../reducer' {
   export interface Reducer {
     response: (i: unknown) => IOE.IOEither<Error, void>
   }
