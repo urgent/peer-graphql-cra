@@ -2,9 +2,10 @@ import * as t from 'io-ts'
 import { GraphQLResponseWithData } from 'relay-runtime'
 import * as E from 'fp-ts/lib/Either'
 import { pipe, identity } from 'fp-ts/lib/function'
+import { Query } from './codegen.dist'
 
-const PayloadData = t.type({
-  data: t.UnknownRecord
+const PayloadData = t.partial({
+  data: Query
 })
 
 const PayloadError = t.type({
@@ -47,7 +48,6 @@ export const runtime = async ([result]: [Promise<unknown>, void]) =>
     E.fold<t.Errors, RUN, RUN>(
       // format runtime decode error to graphql error
       (errors: t.Errors) => ({
-        data: {},
         errors: { message: String(errors) }
       }),
       identity

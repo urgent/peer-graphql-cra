@@ -1,0 +1,6 @@
+overwrite: true
+schema: './data/schema.graphql'
+generates:
+  src/features/peer-graphql/codegen.dist.ts:
+    plugins:
+      - src/features/peer-graphql/codegen.js
