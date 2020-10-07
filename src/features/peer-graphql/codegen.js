@@ -10,9 +10,16 @@ module.exports = {
             'Boolean': 'boolean',
             'id': 'string',
         }
-
         const reduce = typesMap.Query.astNode.fields.reduce((acc, field) => {
-            return `${acc}\n    t.record(t.literal('${field.name.value}'), t.${dict[field.type.name.value]}),`;
+            if (field.type.hasOwnProperty('type')) {
+                // custom graphql type
+                return `${acc}\n  t.record(\n    t.literal('${field.name.value}'),\n    t.union([\n      ${typesMap[field.type.type.name.value]
+                    .astNode.fields.map((field) =>
+                        `t.record(t.literal('${field.name.value}'), t.${dict[field.type.name.value]})`
+                    ).join(',\n      ')}\n    ])\n  )`
+            }
+            //scalar values only
+            return `${acc}\n  t.record(t.literal('${field.name.value}'), t.${dict[field.type.name.value]}),`;
         }, '');
 
         return `import * as t from 'io-ts'\n\nexport const Query = t.union([${reduce}\n])`

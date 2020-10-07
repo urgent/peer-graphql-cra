@@ -80,3 +80,9 @@ export async function digestMessage (message: string) {
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('') // convert bytes to hex string
   return hashHex
 }
+
+export function wait (delay: number) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, delay)
+  })
+}
