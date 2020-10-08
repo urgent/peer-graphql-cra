@@ -3,7 +3,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
-export type RequestQueryVariables = {};
+export type RequestQueryVariables = {
+    hash?: string | null;
+};
 export type RequestQueryResponse = {
     readonly response: ReadonlyArray<{
         readonly hash: string | null;
@@ -18,8 +20,10 @@ export type RequestQuery = {
 
 
 /*
-query RequestQuery {
-  response {
+query RequestQuery(
+  $hash: String
+) {
+  response(hash: $hash) {
     hash
     time
   }
@@ -29,8 +33,21 @@ query RequestQuery {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "hash"
+  }
+],
+v1 = [
+  {
     "alias": null,
-    "args": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "hash",
+        "variableName": "hash"
+      }
+    ],
     "concreteType": "Response",
     "kind": "LinkedField",
     "name": "response",
@@ -56,30 +73,30 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "RequestQuery",
-    "selections": (v0/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RequestQuery",
-    "selections": (v0/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "d5b31f29edeb9b4b9b7a8d48f07925f4",
+    "cacheID": "1e58d67a9aba44f6781ce20fa6406444",
     "id": null,
     "metadata": {},
     "name": "RequestQuery",
     "operationKind": "query",
-    "text": "query RequestQuery {\n  response {\n    hash\n    time\n  }\n}\n"
+    "text": "query RequestQuery(\n  $hash: String\n) {\n  response(hash: $hash) {\n    hash\n    time\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'd3583f85ca88348a285f18fa7312fd71';
+(node as any).hash = '15895df3760d8f7df4b5c253a9ed3031';
 export default node;

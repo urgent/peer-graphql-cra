@@ -23,8 +23,8 @@ const Request = t.type({
 export type REQ = t.TypeOf<typeof Request>
 
 const ResponseQuery = graphql`
-  query RequestQuery {
-    response {
+  query RequestQuery($hash: String) {
+    response(hash: $hash) {
       hash
       time
     }
@@ -36,7 +36,7 @@ export const balance = (delay: number) => async (
 ): Promise<REQ> => {
   commitLocalUpdate(RelayEnvironment, store => {
     console.log('response from local:')
-    const response = store.get('response:1')
+    const response = store.get('client:response:1')
     console.log(response)
     if (response) {
       response.setValue('123', 'hash')
