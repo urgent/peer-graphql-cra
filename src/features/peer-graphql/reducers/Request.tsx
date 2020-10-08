@@ -3,11 +3,12 @@ import * as TE from 'fp-ts/lib/TaskEither'
 import { pipe, flow } from 'fp-ts/lib/function'
 import * as t from 'io-ts'
 import { decode, wait } from '../peer'
-import { schema } from '../schema'
+import { schema, root } from '../graphql/resolve'
 import { doSend } from '../websocket'
 import { Reducer } from '../reducer'
 import { RES } from './Response'
 import RelayEnvironment from '../../../RelayEnvironment'
+import { commitLocalUpdate } from 'react-relay'
 import { fetchQuery } from 'react-relay/hooks'
 import graphql from 'babel-plugin-relay/macro'
 
@@ -22,21 +23,42 @@ const Request = t.type({
 export type REQ = t.TypeOf<typeof Request>
 
 const ResponseQuery = graphql`
-  query RequestQuery($hash: String) {
-    response(hash: $hash) {
+  query RequestQuery {
+    response {
+      hash
       time
     }
   }
 `
-const balance = (delay: number) => async (request: REQ): Promise<REQ> => {
+
+export const balance = (delay: number) => async (
+  request: REQ
+): Promise<REQ> => {
+  commitLocalUpdate(RelayEnvironment, store => {
+    console.log('response from local:')
+    const response = store.get('response:1')
+    console.log(response)
+    if (response) {
+      response.setValue('123', 'hash')
+      response.setValue('1234', 'time')
+    }
+  })
+
   await wait(delay)
-  console.log('request')
-  console.log(await request)
-  const result = (await fetchQuery(RelayEnvironment, ResponseQuery, {
-    hash: request.hash
-  }).toPromise()) as { data: [{}] }
-  if (result.data.length > 0) {
-    //throw new Error('Request already fulfilled')
+  try {
+    const result = (await fetchQuery(
+      RelayEnvironment,
+      ResponseQuery,
+      {}
+    ).toPromise()) as { data: [{}] }
+    console.log('response result:')
+    console.log(result)
+    if (result.data.length > 0) {
+      throw new Error('Request already fulfilled')
+    }
+  } catch (error) {
+    console.log('response query error is')
+    console.log(error)
   }
 
   return request
@@ -44,7 +66,7 @@ const balance = (delay: number) => async (request: REQ): Promise<REQ> => {
 
 export async function query (request: Promise<REQ>): Promise<RES> {
   return pipe(
-    await _graphql(schema, (await request).query),
+    await _graphql(schema, (await request).query, root),
     async (result: ExecutionResult) =>
       ({
         uri: 'response',
@@ -55,7 +77,6 @@ export async function query (request: Promise<REQ>): Promise<RES> {
 }
 
 export async function send (response: Promise<RES>): Promise<void> {
-  console.log(await response)
   return pipe(await response, JSON.stringify, doSend)
 }
 

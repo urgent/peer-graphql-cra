@@ -1,7 +1,7 @@
 import * as fc from 'fast-check';
 import { graphql } from 'graphql'
-import { schema } from '../schema'
-import { query } from './Request'
+import { schema, root } from '../graphql/resolve'
+import { query, balance } from './Request'
 
 const request = {
     uri: fc.constant("request"),
@@ -45,9 +45,15 @@ test('let query to give the same data as graphql ', (done) => {
     fc.assert(
         fc.asyncProperty(fc.record(request), async (a) => {
             const query1 = await query(a)
-            const query2 = await graphql(schema, a.query)
+            const query2 = await graphql(schema, a.query, root)
             expect(query1.data).toMatchObject(query2.data)
             done()
         })
     )
+})
+
+test('response query works ', async (done) => {
+    const query = await graphql(schema, `query ResponseQuery {response{hash,time}}`, root);
+    expect(query.data).toMatchObject({ response: [{ hash: '123', time: '1234' }] })
+    done()
 })

@@ -3,11 +3,10 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
-export type RequestQueryVariables = {
-    hash?: string | null;
-};
+export type RequestQueryVariables = {};
 export type RequestQueryResponse = {
     readonly response: ReadonlyArray<{
+        readonly hash: string | null;
         readonly time: unknown | null;
     } | null> | null;
 };
@@ -19,10 +18,9 @@ export type RequestQuery = {
 
 
 /*
-query RequestQuery(
-  $hash: String
-) {
-  response(hash: $hash) {
+query RequestQuery {
+  response {
+    hash
     time
   }
 }
@@ -31,26 +29,20 @@ query RequestQuery(
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "hash"
-  }
-],
-v1 = [
-  {
     "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "hash",
-        "variableName": "hash"
-      }
-    ],
+    "args": null,
     "concreteType": "Response",
     "kind": "LinkedField",
     "name": "response",
     "plural": true,
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "hash",
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -64,30 +56,30 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "RequestQuery",
-    "selections": (v1/*: any*/),
+    "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
     "name": "RequestQuery",
-    "selections": (v1/*: any*/)
+    "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "b5faed23d7d83fded29fe7f05d9a47ce",
+    "cacheID": "d5b31f29edeb9b4b9b7a8d48f07925f4",
     "id": null,
     "metadata": {},
     "name": "RequestQuery",
     "operationKind": "query",
-    "text": "query RequestQuery(\n  $hash: String\n) {\n  response(hash: $hash) {\n    time\n  }\n}\n"
+    "text": "query RequestQuery {\n  response {\n    hash\n    time\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'a97b74b826af9764bb4218885fedc1d4';
+(node as any).hash = 'd3583f85ca88348a285f18fa7312fd71';
 export default node;

@@ -21,8 +21,8 @@ fetchQuery(
   .subscribe({
     start: () => { console.log('started graphql') },
     complete: () => { console.log('done') },
-    error: (error) => { console.log(error) },
-    next: (data) => { console.log(data) }
+    error: (error) => { console.log('error'); console.log(error) },
+    next: (data) => { console.log('data'); console.log(data) }
   });
 
 

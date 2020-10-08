@@ -2,7 +2,7 @@ import * as t from 'io-ts'
 import { GraphQLResponseWithData } from 'relay-runtime'
 import * as E from 'fp-ts/lib/Either'
 import { pipe, identity } from 'fp-ts/lib/function'
-import { Query } from './codegen.dist'
+import { Query } from './codegen.runtime.dist'
 
 const PayloadData = t.partial({
   data: Query

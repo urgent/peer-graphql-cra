@@ -24,5 +24,5 @@ module.exports = {
 
         return `import * as t from 'io-ts'\n\nexport const Query = t.union([${reduce}\n])`
             ;
-    },
+    }
 };

@@ -5,7 +5,7 @@ import { pipe, flow } from 'fp-ts/lib/function'
 import { eventEmitter } from './eventEmitter'
 import { doSend } from './websocket'
 import { digestMessage } from './peer'
-import { format, runtime } from './graphQLResponseWithData'
+import { format, runtime } from './graphql/graphQLResponseWithData'
 
 const respond = (eventEmitter: EventEmitter) => (hash: string) =>
   new Promise((resolve, reject) => {
