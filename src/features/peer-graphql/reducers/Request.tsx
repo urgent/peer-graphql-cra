@@ -9,6 +9,7 @@ import { Reducer } from '../reducer'
 import { RES } from './Response'
 import RelayEnvironment from '../../../RelayEnvironment'
 import { commitLocalUpdate } from 'react-relay'
+import { createOperationDescriptor, getRequest } from 'relay-runtime'
 import { fetchQuery } from 'react-relay/hooks'
 import graphql from 'babel-plugin-relay/macro'
 
@@ -35,14 +36,16 @@ export const balance = (delay: number) => async (
   request: REQ
 ): Promise<REQ> => {
   commitLocalUpdate(RelayEnvironment, store => {
-    console.log('response from local:')
-    const response = store.get('client:response:1')
-    console.log(response)
-    if (response) {
-      response.setValue('123', 'hash')
-      response.setValue('1234', 'time')
-    }
+    store.create(`client:Response:2`, 'Response')
+    const resp = store.get('client:Response:2')
+    console.log(resp)
   })
+  const concreteRequest = getRequest(ResponseQuery)
+  const operation = createOperationDescriptor(
+    concreteRequest,
+    { hash: '123' } /* variables */
+  )
+  RelayEnvironment.retain(operation)
 
   await wait(delay)
   try {
