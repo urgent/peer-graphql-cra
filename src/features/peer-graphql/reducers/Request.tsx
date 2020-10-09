@@ -10,7 +10,6 @@ import { RES } from './Response'
 import RelayEnvironment from '../../../RelayEnvironment'
 import { commitLocalUpdate } from 'react-relay'
 import { createOperationDescriptor, getRequest } from 'relay-runtime'
-import { fetchQuery } from 'react-relay/hooks'
 import graphql from 'babel-plugin-relay/macro'
 
 // define types for decode
@@ -37,28 +36,28 @@ export const balance = (delay: number) => async (
 ): Promise<REQ> => {
   commitLocalUpdate(RelayEnvironment, store => {
     store.create(`client:Response:2`, 'Response')
-    const resp = store.get('client:Response:2')
-    console.log(resp)
+    const response = store.get('client:Response:2')
+    if (response) {
+      response.setValue('12333', 'hash')
+      response.setValue('1234', 'time')
+    }
   })
   const concreteRequest = getRequest(ResponseQuery)
   const operation = createOperationDescriptor(
     concreteRequest,
-    { hash: '123' } /* variables */
+    {} /* variables */
   )
+
   RelayEnvironment.retain(operation)
 
   await wait(delay)
   try {
-    const result = (await fetchQuery(
-      RelayEnvironment,
-      ResponseQuery,
-      {}
-    ).toPromise()) as { data: [{}] }
-    console.log('response result:')
-    console.log(result)
-    if (result.data.length > 0) {
-      throw new Error('Request already fulfilled')
-    }
+    commitLocalUpdate(RelayEnvironment, store => {
+      const response = store.get('client:Response:2')
+      if (response) {
+        console.log(response.getValue('hash'))
+      }
+    })
   } catch (error) {
     console.log('response query error is')
     console.log(error)
