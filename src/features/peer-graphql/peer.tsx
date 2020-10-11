@@ -14,6 +14,7 @@ type URIS = keyof URI2Type
 declare module './reducer' {
   export interface Props {
     uri: URIS
+    delay: number
   }
 }
 
@@ -79,10 +80,4 @@ export async function digestMessage (message: string) {
   const hashArray = Array.from(new Uint8Array(hashBuffer)) // convert buffer to byte array
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('') // convert bytes to hex string
   return hashHex
-}
-
-export function wait (delay: number) {
-  return new Promise(function (resolve, reject) {
-    setTimeout(resolve, delay)
-  })
 }
