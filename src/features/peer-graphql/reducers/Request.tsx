@@ -27,6 +27,7 @@ export function check (request: REQ): TE.TaskEither<Error, REQ> {
     .get(`client:Response:${request.hash}`) as REQ
   if (data) {
     commitLocalUpdate(RelayEnvironment, store => {
+      console.log('delete from request handler')
       store.delete(`client:Response:${request.hash}`)
     })
     return TE.left(new Error('Response already fulfilled'))
