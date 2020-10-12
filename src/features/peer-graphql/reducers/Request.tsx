@@ -9,8 +9,6 @@ import { Reducer } from '../reducer'
 import { RES } from './Response'
 import RelayEnvironment from '../../../RelayEnvironment'
 import { commitLocalUpdate } from 'react-relay'
-import { createOperationDescriptor, getRequest } from 'relay-runtime'
-import graphql from 'babel-plugin-relay/macro'
 
 // define types for decode
 const Request = t.type({
@@ -22,38 +20,15 @@ const Request = t.type({
 
 export type REQ = t.TypeOf<typeof Request>
 
-const ResponseQuery = graphql`
-  query RequestQuery($hash: String) {
-    response(hash: $hash) {
-      hash
-      time
-    }
-  }
-`
-
 export function check (request: REQ): TE.TaskEither<Error, REQ> {
-  // side-effect, add record
-  commitLocalUpdate(RelayEnvironment, store => {
-    store.create(`client:Response:12333`, 'Response')
-    const response = store.get('client:Response:2')
-    if (response) {
-      response.setValue('12333', 'hash')
-      response.setValue('1234', 'time')
-    }
-  })
-  // side-effect, retain record
-  const concreteRequest = getRequest(ResponseQuery)
-  const operation = createOperationDescriptor(concreteRequest, {})
-  RelayEnvironment.retain(operation)
-
   // side-effect, get record
   const data = RelayEnvironment.getStore()
     .getSource()
-    .get('client:Response:12333') as REQ
-  console.log('state')
-  console.log(data)
+    .get(`client:Response:${request.hash}`) as REQ
   if (data) {
-    console.log('Response already fulfilled')
+    commitLocalUpdate(RelayEnvironment, store => {
+      store.delete(`client:Response:${request.hash}`)
+    })
     return TE.left(new Error('Response already fulfilled'))
   } else {
     return TE.right(request)
@@ -73,7 +48,6 @@ export async function query (request: REQ): Promise<RES> {
 }
 
 export async function send (response: Promise<RES>): Promise<void> {
-  console.log('sending')
   return pipe(await response, JSON.stringify, doSend)
 }
 
@@ -94,14 +68,11 @@ function delay (): (
   return ma => () =>
     new Promise(resolve => {
       setTimeout(() => {
-        console.log('end wait')
-        // tslint:disable-next-line: no-floating-promises
         ma().then(resolve)
       }, (Math.floor(Math.random() * 150) + 1) * 20)
     })
 }
 
-// extend reducer
 Reducer.prototype.request = flow(
   decode(Request),
   TE.fromEither,

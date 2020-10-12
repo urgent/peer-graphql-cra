@@ -3,24 +3,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
-export type RequestQueryVariables = {
+export type ResponseQueryVariables = {
     hash?: string | null;
 };
-export type RequestQueryResponse = {
+export type ResponseQueryResponse = {
     readonly response: ReadonlyArray<{
         readonly hash: string | null;
         readonly time: unknown | null;
     } | null> | null;
 };
-export type RequestQuery = {
-    readonly response: RequestQueryResponse;
-    readonly variables: RequestQueryVariables;
+export type ResponseQuery = {
+    readonly response: ResponseQueryResponse;
+    readonly variables: ResponseQueryVariables;
 };
 
 
 
 /*
-query RequestQuery(
+query ResponseQuery(
   $hash: String
 ) {
   response(hash: $hash) {
@@ -76,7 +76,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "RequestQuery",
+    "name": "ResponseQuery",
     "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -85,18 +85,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "RequestQuery",
+    "name": "ResponseQuery",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "1e58d67a9aba44f6781ce20fa6406444",
+    "cacheID": "15d653bce579b268c6e27cbc9a34b798",
     "id": null,
     "metadata": {},
-    "name": "RequestQuery",
+    "name": "ResponseQuery",
     "operationKind": "query",
-    "text": "query RequestQuery(\n  $hash: String\n) {\n  response(hash: $hash) {\n    hash\n    time\n  }\n}\n"
+    "text": "query ResponseQuery(\n  $hash: String\n) {\n  response(hash: $hash) {\n    hash\n    time\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '15895df3760d8f7df4b5c253a9ed3031';
+(node as any).hash = 'c1a0c7658665873ea89b2fb7aebd62df';
 export default node;
