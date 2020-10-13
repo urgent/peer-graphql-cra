@@ -40,18 +40,6 @@ const ResponseQuery = graphql`
 export function cache (request: RES): IOE.IOEither<Error, RES> {
   // side-effect, add record
   commitLocalUpdate(RelayEnvironment, store => {
-    /*
-
-    responds to:
-    1. Requests started by itself <-- no delete
-    2. Requests from others <-- deletes when starting response
-
-    options:
-    1. Delete store in Relay networking
-    2. 
-
-    */
-
     store.create(`client:Response:${request.hash}`, 'Response')
   })
 
