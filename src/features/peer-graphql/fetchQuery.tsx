@@ -13,7 +13,6 @@ const respond = (eventEmitter: EventEmitter) => (hash: string) =>
   new Promise((resolve, reject) => {
     eventEmitter.once(hash, data => {
       commitLocalUpdate(RelayEnvironment, store => {
-        console.log('delete after request')
         store.delete(`client:Response:${hash}`)
       })
       resolve(data)

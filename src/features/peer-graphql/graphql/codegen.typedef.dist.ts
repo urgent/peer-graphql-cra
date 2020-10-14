@@ -1,5 +1,9 @@
 export default `scalar DateTime
 
+type Keypair {
+  pair: String
+}
+
 type Response {
   hash: String
   time: DateTime

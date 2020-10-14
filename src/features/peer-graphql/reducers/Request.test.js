@@ -1,11 +1,7 @@
 import * as fc from 'fast-check';
 import { graphql as _graphql } from 'graphql'
 import { schema, root } from '../graphql/resolve'
-import { query, balance } from './Request'
-import { commitLocalUpdate } from 'react-relay'
-import RelayEnvironment from '../../../RelayEnvironment'
-import { fetchQuery } from 'react-relay/hooks'
-import graphql from 'babel-plugin-relay/macro';
+import { query } from './Request'
 
 
 

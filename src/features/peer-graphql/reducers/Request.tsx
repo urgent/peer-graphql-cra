@@ -9,6 +9,8 @@ import { Reducer } from '../reducer'
 import { RES } from './Response'
 import RelayEnvironment from '../../../RelayEnvironment'
 import { commitLocalUpdate } from 'react-relay'
+import { sign, SignKeyPair } from 'tweetnacl'
+import * as Stablelib from '@stablelib/base64'
 
 // define types for decode
 const Request = t.type({
@@ -21,18 +23,45 @@ const Request = t.type({
 export type REQ = t.TypeOf<typeof Request>
 
 export function check (request: REQ): TE.TaskEither<Error, REQ> {
-  // side-effect, get record
   const data = RelayEnvironment.getStore()
     .getSource()
     .get(`client:Response:${request.hash}`) as REQ
   if (data) {
     commitLocalUpdate(RelayEnvironment, store => {
-      console.log('delete from request handler')
       store.delete(`client:Response:${request.hash}`)
     })
     return TE.left(new Error('Response already fulfilled'))
   } else {
     return TE.right(request)
+  }
+}
+
+export function secret (): SignKeyPair {
+  const data = RelayEnvironment.getStore()
+    .getSource()
+    .get(`client:Sign.KeyPair`) as { pair: string }
+  if (data) {
+    const json = JSON.parse(data.pair) as {
+      secretKey: string
+      publicKey: string
+    }
+    return {
+      secretKey: Stablelib.decode(json.secretKey),
+      publicKey: Stablelib.decode(json.publicKey)
+    } as SignKeyPair
+  } else {
+    const pair = sign.keyPair()
+    commitLocalUpdate(RelayEnvironment, store => {
+      const data = store.create(`client:Sign.KeyPair`, 'Keypair')
+      data.setValue(
+        JSON.stringify({
+          secretKey: Stablelib.encode(pair.secretKey),
+          publicKey: Stablelib.encode(pair.publicKey)
+        }),
+        'pair'
+      )
+    })
+    return pair
   }
 }
 
@@ -43,7 +72,8 @@ export async function query (request: REQ): Promise<RES> {
       ({
         uri: 'response',
         hash: request.hash,
-        data: result.data
+        data: result.data,
+        signature: sign(Stablelib.decode(request.hash), secret()['secretKey'])
       } as RES)
   )
 }

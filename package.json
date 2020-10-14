@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@stablelib/base64": "^1.0.0",
+    "@stablelib/utf8": "^1.0.0",
     "@types/react-relay": "^7.0.12",
     "graphql-scalars": "^1.4.0",
     "isomorphic-ws": "^4.0.1",
@@ -11,7 +13,8 @@
     "react-relay": "^0.0.0-experimental-183bdd28",
     "react-scripts": "3.4.3",
     "relay-runtime": "^10.0.1",
-    "source-map-explorer": "^2.5.0"
+    "source-map-explorer": "^2.5.0",
+    "tweetnacl": "^1.0.3"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -26,7 +29,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
