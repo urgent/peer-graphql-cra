@@ -100,7 +100,7 @@ function delay (): (
     new Promise(resolve => {
       setTimeout(() => {
         ma().then(resolve)
-      }, (Math.floor(Math.random() * 150) + 1) * 20)
+      }, (Math.floor(Math.random() * 30) + 1) * 20)
     })
 }
 
